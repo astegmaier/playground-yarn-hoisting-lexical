@@ -16,9 +16,9 @@
     "reinstall:windows:all": "npm run clean:windows:all && yarn install",
     "reinstall:bash": "npm run clean:bash && yarn install",
     "reinstall:bash:all": "npm run clean:bash:all && yarn install",
-    "clean:windows": "powershell -Command \"Remove-Item -Path 'node_modules', 'packages/a/node_modules', 'packages/b/node_modules', '.yarn/install-state.gz' -Recurse -Force -ErrorAction SilentlyContinue; exit 0\"",
+    "clean:windows": "powershell -Command \"Remove-Item -Path 'node_modules', 'packages/a/node_modules', 'packages/b/node_modules', '.yarn/install-state.gz', '.pnpm-store', '.pnpm-cache' -Recurse -Force -ErrorAction SilentlyContinue; exit 0\"",
     "clean:windows:all": "powershell -Command \"Remove-Item -Path 'yarn.lock' -Recurse -Force -ErrorAction SilentlyContinue; exit 0\" && npm run clean:windows",
-    "clean:bash": "rm -rf node_modules packages/a/node_modules packages/b/node_modules .yarn/install-state.gz",
+    "clean:bash": "rm -rf node_modules packages/a/node_modules packages/b/node_modules .yarn/install-state.gz .pnpm-store .pnpm-cache",
     "clean:bash:all": "rm yarn.lock && npm run clean:bash"
   },
   "workspaces": {
