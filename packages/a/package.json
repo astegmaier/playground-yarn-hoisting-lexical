@@ -4,6 +4,10 @@
   "version": "1.0.0",
   "type": "module",
   "dependencies": {
-    "@lexical/markdown": "^0.12.6"
+    "@lexical/clipboard": "0.12.6",
+    "@lexical/markdown": "^0.12.6",
+    "@lexical/selection": "0.12.6",
+    "@lexical/utils": "0.12.6",
+    "lexical": "0.12.6"
   }
 }

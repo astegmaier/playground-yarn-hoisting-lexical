@@ -5,6 +5,20 @@ __metadata:
   version: 8
   cacheKey: 10c0
 
+"@lexical/clipboard@npm:0.12.6":
+  version: 0.12.6
+  resolution: "@lexical/clipboard@npm:0.12.6"
+  dependencies:
+    "@lexical/html": "npm:0.12.6"
+    "@lexical/list": "npm:0.12.6"
+    "@lexical/selection": "npm:0.12.6"
+    "@lexical/utils": "npm:0.12.6"
+  peerDependencies:
+    lexical: 0.12.6
+  checksum: 10c0/478d2782ef237b27eb5f140025ca4c17d15ae505168ca7af8cf1fd7554271bd776322cf8b38a907e173358212626ea5bf08bf6930f2c0c2856a669c054d7f29c
+  languageName: node
+  linkType: hard
+
 "@lexical/clipboard@npm:0.30.0, @lexical/clipboard@npm:^0.30.0":
   version: 0.30.0
   resolution: "@lexical/clipboard@npm:0.30.0"
@@ -27,6 +41,18 @@ __metadata:
   peerDependencies:
     lexical: 0.12.6
   checksum: 10c0/0d27a5d6a005d280b19e25c961e519080dfd133ced6f22d9a1454da74c6b764bef5f608a68bd008cc6eb217c82eaa5519c03d85bdba794f3de1162b7998445b6
+  languageName: node
+  linkType: hard
+
+"@lexical/html@npm:0.12.6":
+  version: 0.12.6
+  resolution: "@lexical/html@npm:0.12.6"
+  dependencies:
+    "@lexical/selection": "npm:0.12.6"
+    "@lexical/utils": "npm:0.12.6"
+  peerDependencies:
+    lexical: 0.12.6
+  checksum: 10c0/2d77f09415229748d22e499fc11cee209abf296a02d3e26f27e79d4e29d8e3475b03a5aa985257e8a3fad8bda4504922965816df058adb6e77cb29d00ec46964
   languageName: node
   linkType: hard
 
@@ -176,6 +202,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lexical@npm:0.12.6":
+  version: 0.12.6
+  resolution: "lexical@npm:0.12.6"
+  checksum: 10c0/bda556b99777c32b91338e875675449b13f6c3d595b872a61fa76d4da66c846da6525f854adff5382a0cd168b2445fc659072c24c3537dfd6721738b938a1904
+  languageName: node
+  linkType: hard
+
 "lexical@npm:0.30.0":
   version: 0.30.0
   resolution: "lexical@npm:0.30.0"
@@ -187,7 +220,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "package-a@workspace:packages/a"
   dependencies:
+    "@lexical/clipboard": "npm:0.12.6"
     "@lexical/markdown": "npm:^0.12.6"
+    "@lexical/selection": "npm:0.12.6"
+    "@lexical/utils": "npm:0.12.6"
+    lexical: "npm:0.12.6"
   languageName: unknown
   linkType: soft
 
