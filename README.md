@@ -8,7 +8,7 @@ This is a simple monorepo with two packages, `a` and `b`. We want each to use th
 
 `a` is trying to use older versions of lexical packages, this dependency chain (simplified):
 
-```json
+```jsonc
 {
   "name": "package-a",
   "dependencies": {
@@ -21,7 +21,7 @@ This is a simple monorepo with two packages, `a` and `b`. We want each to use th
 }
 ```
 
-```json
+```jsonc
 {
   "name": "@lexical/markdown",
   "version": "0.12.6",
@@ -34,7 +34,7 @@ This is a simple monorepo with two packages, `a` and `b`. We want each to use th
 }
 ```
 
-```json
+```jsonc
 {
   "name": "@lexical/rich-text",
   "version": "0.12.6",
@@ -47,7 +47,7 @@ This is a simple monorepo with two packages, `a` and `b`. We want each to use th
 
 `b` is trying to use new versions of lexical packages, and has this dependency chain:
 
-```json
+```jsonc
 {
   "name": "package-b",
   "dependencies": {
