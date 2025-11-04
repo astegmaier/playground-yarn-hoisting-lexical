@@ -2,6 +2,8 @@
 
 This is a playground to permit experimentation with yarn4's hoisting behavior when using `lexical`-related dependencies in a monorepo.
 
+**Note:** This is the `main` branch of the project, which uses `yarn4` to illustrate the problem. For the exact same scenario with `pnpm` (which solves the problems identified here!) go to [the `pnpm` branch](https://github.com/astegmaier/playground-yarn-hoisting-lexical/tree/pnpm).
+
 ## Setup
 
 This is a simple monorepo with two packages, `a` and `b`. We want each to use their own specified versions of lexical-related packages. However, yarn4 hoisting mixes things up.
