@@ -2,7 +2,7 @@
 
 This is a playground to permit experimentation with yarn4's hoisting behavior when using `lexical`-related dependencies in a monorepo.
 
-**Note:** This is the `pnpm` branch of the project, which tries the exact same scenario with pnpm instead of yarn.
+**Note:** This is the `pnpm` branch of the project, which tries the exact same scenario with pnpm instead of yarn. For the yarn scenario, check out [the `main` branch](https://github.com/astegmaier/playground-yarn-hoisting-lexical/tree/main).
 
 ## Setup
 
