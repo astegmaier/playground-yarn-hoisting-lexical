@@ -1,6 +1,6 @@
 {
   "name": "playground-yarn-hoisting-lexical",
-  "description": "A playground to experiment with yarn hoisting behavior with lexical package",
+  "description": "A playground to experiment with yarn hoisting behavior with lexical packages",
   "author": "Andrew Stegmaier",
   "license": "ISC",
   "private": true,
