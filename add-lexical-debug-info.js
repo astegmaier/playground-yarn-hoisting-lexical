@@ -56,8 +56,11 @@ function findPackageDirectories(dir, packageName, filesToAppendTo) {
  * Appends the debug line to an index.js file
  */
 function appendDebugLine(filePath, packageName) {
-    const debugLine = `\nconsole.log('Imported ${packageName} version:', require('./package.json').version, 'from:', __dirname);`;
-    
+    const debugLineCjs = `\nconsole.log('Imported ${packageName} version:', require('./package.json').version, 'from:', __dirname);`;
+    const debugLineEsm = `\nimport pkg from'./package.json' with { type: 'json' };\nconsole.log('Imported ${packageName} version:', pkg.version, 'from:', import.meta.url);`;
+    const isEsm = filePath.endsWith('.mjs');
+    const debugLine = isEsm ? debugLineEsm : debugLineCjs;
+
     try {
         // Read the current content
         const currentContent = fs.readFileSync(filePath, 'utf8');
@@ -102,7 +105,7 @@ function main() {
     for (const { packageDir, filePath } of packageDirs) {
         console.log(`\nProcessing: ${packageDir}`);
         
-        if (appendDebugLine(filePath)) {
+        if (appendDebugLine(filePath, packageName)) {
             modifiedCount++;
         }
     }
