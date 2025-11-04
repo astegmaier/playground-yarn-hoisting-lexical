@@ -6,7 +6,7 @@ This is a playground to permit experimentation with yarn4's hoisting behavior wh
 
 This is a simple monorepo with two packages, `a` and `b`. We want each to use their own specified versions of lexical-related packages. However, yarn4 hoisting mixes things up.
 
-`a` is trying to use older versions of lexical packages, this dependency chain (simplified):
+`a` is trying to use older versions of lexical packages, and has this dependency chain (simplified):
 
 ```jsonc
 {
