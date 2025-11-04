@@ -1,12 +1,15 @@
 const fs = require('fs');
 const path = require('path');
 
-// TODO: make this modify @lexical/clipboard instead of react
-
 /**
- * Recursively searches for directories named '@lexical/clipboard' and appends debug info to their index.js files
+ * Recursively searches for directories with a particular package name and appends debug info to their index.js files
+ * @param {string} dir - The directory to start searching from
+ * @param {string} packageName - The name of the package to look for (default: 'react')
+ * @returns {Array<{packageDir: string, indexPath: string}} - An array of objects containing the paths of found package directories and their index.js files
  */
-function findReactDirectories(dir) {
+function findPackageDirectories(dir, packageName) {
+    const packageNameLowerCase = packageName.toLowerCase();
+    /** @type {Array<{packageDir: string, indexPath: string}>} */
     const results = [];
     
     try {
@@ -19,21 +22,21 @@ function findReactDirectories(dir) {
                 const stats = fs.statSync(fullPath);
                 
                 if (stats.isDirectory()) {
-                    // Check if this directory is named 'react'
-                    if (item.toLowerCase() === 'react') {
+                    // Check if this directory matches the name we're looking for
+                    if (item.toLowerCase() === packageNameLowerCase) {
                         const indexPath = path.join(fullPath, 'index.js');
-                        
-                        // Check if index.js exists in this react directory
+
+                        // Check if index.js exists in this package directory
                         if (fs.existsSync(indexPath)) {
                             results.push({
-                                reactDir: fullPath,
+                                packageDir: fullPath,
                                 indexPath: indexPath
                             });
                         }
                     }
                     
                     // Recursively search subdirectories
-                    const subResults = findReactDirectories(fullPath);
+                    const subResults = findPackageDirectories(fullPath, packageName);
                     results.push(...subResults);
                 }
             } catch (statError) {
@@ -79,29 +82,29 @@ function appendDebugLine(indexPath) {
  */
 function main() {
     const baseDir = process.cwd();
-    console.log(`Searching for React directories in: ${baseDir}`);
-    console.log('Looking for directories named "react" with index.js files...\n');
+    console.log(`Searching for Clipboard directories in: ${baseDir}`);
+    console.log('Looking for directories named "clipboard" with index.js files...\n');
+
+    const packageDirs = findPackageDirectories(baseDir, 'clipboard');
     
-    const reactDirs = findReactDirectories(baseDir);
-    
-    if (reactDirs.length === 0) {
-        console.log('No React directories with index.js files found.');
+    if (packageDirs.length === 0) {
+        console.log('No Clipboard directories with index.js files found.');
         return;
     }
     
-    console.log(`Found ${reactDirs.length} React director${reactDirs.length === 1 ? 'y' : 'ies'} with index.js files:`);
+    console.log(`Found ${packageDirs.length} React director${packageDirs.length === 1 ? 'y' : 'ies'} with index.js files:`);
     
     let modifiedCount = 0;
     
-    for (const { reactDir, indexPath } of reactDirs) {
-        console.log(`\nProcessing: ${reactDir}`);
+    for (const { packageDir, indexPath } of packageDirs) {
+        console.log(`\nProcessing: ${packageDir}`);
         
         if (appendDebugLine(indexPath)) {
             modifiedCount++;
         }
     }
     
-    console.log(`\nSummary: Modified ${modifiedCount} out of ${reactDirs.length} index.js file(s).`);
+    console.log(`\nSummary: Modified ${modifiedCount} out of ${packageDirs.length} index.js file(s).`);
 }
 
 // Run the script
