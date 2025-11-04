@@ -2,4 +2,4 @@
 
 // Testing out an import that is actually declared in a/package.json
 import LexicalMarkdown from "@lexical/markdown";
-console.log(!!LexicalMarkdown);
+console.log(!!LexicalMarkdown ? 'packages/a/index.js imported { LexicalMarkdown } from "@lexical/markdown" successfully!' : 'Failed to import LexicalMarkdown');
