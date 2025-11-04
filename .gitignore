@@ -1,2 +1,6 @@
 node_modules
 .yarn/install-state.gz
+
+# pnpm local cache directories
+.pnpm-store
+.pnpm-cache
