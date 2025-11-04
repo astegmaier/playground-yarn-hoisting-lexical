@@ -67,3 +67,7 @@ This is a simple monorepo with two packages, `a` and `b`. We want each to use th
     - Reinstall dependencies with `pnpm install`
     - Run a script that will look for all installed versions of `@lexical/clipboard`, and add a console.log statement to the end of them that will enable you to see which ones get imported.
     - Run the actual code packages A and B, which simply imports a random thing from their direct dependencies and logs it. This will output console statements showing what actually got imported.
+
+With pnpm, unlike with yarn4, both packages A and B get the versions of `@lexical/clipboard` that they expect!
+
+![Repro](./images/Repro.png)
