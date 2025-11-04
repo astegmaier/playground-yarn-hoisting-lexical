@@ -12,19 +12,14 @@
     "test": "npm run test:a && npm run test:b",
     "test:a": "node --import ./scripts/register-es-import-trace.js packages/a/index.js",
     "test:b": "node --import ./scripts/register-es-import-trace.js packages/b/index.js",
-    "reinstall:windows": "npm run clean:windows && yarn install",
-    "reinstall:windows:all": "npm run clean:windows:all && yarn install",
-    "reinstall:bash": "npm run clean:bash && yarn install",
-    "reinstall:bash:all": "npm run clean:bash:all && yarn install",
-    "clean:windows": "powershell -Command \"Remove-Item -Path 'node_modules', 'packages/a/node_modules', 'packages/b/node_modules', '.yarn/install-state.gz' -Recurse -Force -ErrorAction SilentlyContinue; exit 0\"",
-    "clean:windows:all": "powershell -Command \"Remove-Item -Path 'yarn.lock' -Recurse -Force -ErrorAction SilentlyContinue; exit 0\" && npm run clean:windows",
-    "clean:bash": "rm -rf node_modules packages/a/node_modules packages/b/node_modules .yarn/install-state.gz",
-    "clean:bash:all": "rm yarn.lock && npm run clean:bash"
+    "reinstall:windows": "npm run clean:windows && pnpm install",
+    "reinstall:windows:all": "npm run clean:windows:all && pnpm install",
+    "reinstall:bash": "npm run clean:bash && pnpm install",
+    "reinstall:bash:all": "npm run clean:bash:all && pnpm install",
+    "clean:windows": "powershell -Command \"Remove-Item -Path 'node_modules', 'packages/a/node_modules', 'packages/b/node_modules' -Recurse -Force -ErrorAction SilentlyContinue; exit 0\"",
+    "clean:windows:all": "powershell -Command \"Remove-Item -Path 'pnpm-lock.yaml' -Recurse -Force -ErrorAction SilentlyContinue; exit 0\" && npm run clean:windows",
+    "clean:bash": "rm -rf node_modules packages/a/node_modules packages/b/node_modules",
+    "clean:bash:all": "rm pnpm-lock.yaml && npm run clean:bash"
   },
-  "workspaces": {
-    "packages": [
-      "packages/*"
-    ]
-  },
-  "packageManager": "yarn@4.10.3"
+  "packageManager": "pnpm@10.20.0"
 }
