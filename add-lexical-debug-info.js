@@ -66,7 +66,7 @@ function appendDebugLine(filePath, packageName) {
         const currentContent = fs.readFileSync(filePath, 'utf8');
         
         // Check if the debug line already exists to avoid duplicates
-        if (currentContent.includes(`console.log('Imported ${packageName} version':`)) {
+        if (currentContent.includes(debugLine)) {
             console.log(`Debug line already exists in: ${filePath}`);
             return false;
         }
