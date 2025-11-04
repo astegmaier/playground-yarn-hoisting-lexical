@@ -19,7 +19,8 @@
     "clean:windows": "powershell -Command \"Remove-Item -Path 'node_modules', 'packages/a/node_modules', 'packages/b/node_modules', '.pnpm-store', '.pnpm-cache' -Recurse -Force -ErrorAction SilentlyContinue; exit 0\"",
     "clean:windows:all": "powershell -Command \"Remove-Item -Path 'pnpm-lock.yaml' -Recurse -Force -ErrorAction SilentlyContinue; exit 0\" && npm run clean:windows",
     "clean:bash": "rm -rf node_modules packages/a/node_modules packages/b/node_modules .pnpm-store .pnpm-cache",
-    "clean:bash:all": "rm pnpm-lock.yaml && npm run clean:bash"
+    "clean:bash:all": "rm pnpm-lock.yaml && npm run clean:bash",
+    "postinstall": "node scripts/add-lexical-debug-info.js"
   },
   "packageManager": "pnpm@10.20.0"
 }
