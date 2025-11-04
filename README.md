@@ -67,8 +67,8 @@ This is a simple monorepo with two packages, `a` and `b`. We want each to use th
 
 You can see that package A ends up using `@lexical/clipboard` version `0.30.0`, even though it was expecting `0.12.6`:
 
-![Repro](Repro.png)
+![Repro](./images/Repro.png)
 
 Running `yarn explain peer-requirements` shows a warning that seems related to the problem:
 
-![Peer requirements warning](ExplainPeerRequirements.png)
+![Peer requirements warning](./images/ExplainPeerRequirements.png)

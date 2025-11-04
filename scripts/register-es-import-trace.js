@@ -1,3 +1,3 @@
 const { register } = require("node:module");
 const { pathToFileURL } = require("node:url");
-register("./es-import-trace.js", pathToFileURL("./"));
+register("./scripts/es-import-trace.js", pathToFileURL("./"));
