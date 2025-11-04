@@ -38,6 +38,7 @@ This is a simple monorepo with two packages, `a` and `b`. We want each to use th
 {
   "name": "@lexical/rich-text",
   "version": "0.12.6",
+  // NOTE: these are specified as peerDependencies NOT dependencies:
   "peerDependencies": {
     "@lexical/clipboard": "0.12.6",
     // ...others omitted
@@ -69,6 +70,14 @@ You can see that package A ends up using `@lexical/clipboard` version `0.30.0`, 
 
 ![Repro](./images/Repro.png)
 
+## Notes
+
 Running `yarn explain peer-requirements` shows a warning that seems related to the problem:
 
 ![Peer requirements warning](./images/ExplainPeerRequirements.png)
+
+The issue was noticed by the lexical team in [Bug: peerDependencies from monorepo packages cause npm resolution errors #5783](https://github.com/facebook/lexical/issues/5783).
+
+The fix (i.e. changing `@lexical/rich-text` to specify `@lexical/clipboard` as a `dependency` instead of a `peerDependency`) was merged in [PR 5774: Node fork modules & moduleResolution bundler](https://github.com/facebook/lexical/pull/5774/files#diff-bd982f01c37e5b1c1687d8d11c3a0bcb8d3c64b0e027fc286efd5003766b1698) and published in `@lexical/rich-text` version `0.14.3`.
+
+But the fix was not backported, so you can still get in this state if you are in a monorepo that depends (in part) on old versions of lexical packages.
