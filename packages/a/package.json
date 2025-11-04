@@ -1,0 +1,9 @@
+{
+  "name": "package-a",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "@lexical/markdown": "^0.12.6"
+  }
+}

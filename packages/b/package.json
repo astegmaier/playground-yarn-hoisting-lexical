@@ -1,0 +1,9 @@
+{
+  "name": "package-b",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "@lexical/clipboard": "^0.30.0"
+  }
+}
