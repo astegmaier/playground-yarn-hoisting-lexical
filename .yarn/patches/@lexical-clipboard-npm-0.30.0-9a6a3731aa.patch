@@ -1,0 +1,74 @@
+diff --git a/LexicalClipboard.dev.js b/LexicalClipboard.dev.js
+index cba0cf22f53b488c0d4576773b53032082aea8be..83a5e6d4337dce912e160cbd589d727ae3ed1f6a 100644
+--- a/LexicalClipboard.dev.js
++++ b/LexicalClipboard.dev.js
+@@ -1,3 +1,5 @@
++console.log('Imported clipboard version:', require('./package.json').version, '(MANUAL CHECK 0.30.0)', 'from:', __dirname);
++
+ /**
+  * Copyright (c) Meta Platforms, Inc. and affiliates.
+  *
+diff --git a/LexicalClipboard.dev.mjs b/LexicalClipboard.dev.mjs
+index f40a5d142a6d0eb2fec846068f4f46f141504f3a..8d5fdbcdbe72f622248dbca204dee60d62a49499 100644
+--- a/LexicalClipboard.dev.mjs
++++ b/LexicalClipboard.dev.mjs
+@@ -1,3 +1,6 @@
++import pkg from'./package.json' with { type: 'json' };
++console.log('Imported clipboard version:', pkg.version, '(MANUAL CHECK 0.30.0)', 'from:', import.meta.url);
++
+ /**
+  * Copyright (c) Meta Platforms, Inc. and affiliates.
+  *
+diff --git a/LexicalClipboard.js b/LexicalClipboard.js
+index 34bc5fe6d71a82a5e8cdd64398fcaac6e92d6dee..94887dc54db5230396f63075a7af464ff73192b3 100644
+--- a/LexicalClipboard.js
++++ b/LexicalClipboard.js
+@@ -1,3 +1,5 @@
++console.log('Imported clipboard version:', require('./package.json').version, '(MANUAL CHECK 0.30.0)', 'from:', __dirname);
++
+ /**
+  * Copyright (c) Meta Platforms, Inc. and affiliates.
+  *
+diff --git a/LexicalClipboard.mjs b/LexicalClipboard.mjs
+index 47505642d2cca82f37b0da2e2fc48296ab7dc16c..2635fd87ba39b6f1472eb6802569732a22580b3a 100644
+--- a/LexicalClipboard.mjs
++++ b/LexicalClipboard.mjs
+@@ -1,3 +1,6 @@
++import pkg from'./package.json' with { type: 'json' };
++console.log('Imported clipboard version:', pkg.version, '(MANUAL CHECK 0.30.0)', 'from:', import.meta.url);
++
+ /**
+  * Copyright (c) Meta Platforms, Inc. and affiliates.
+  *
+diff --git a/LexicalClipboard.node.mjs b/LexicalClipboard.node.mjs
+index 185e1fbae246a9ff1fe0f3929b291366ab4e2b16..d174e505b77949343138051977466cd73837afa3 100644
+--- a/LexicalClipboard.node.mjs
++++ b/LexicalClipboard.node.mjs
+@@ -1,3 +1,6 @@
++import pkg from'./package.json' with { type: 'json' };
++console.log('Imported clipboard version:', pkg.version, '(MANUAL CHECK 0.30.0)', 'from:', import.meta.url);
++
+ /**
+  * Copyright (c) Meta Platforms, Inc. and affiliates.
+  *
+diff --git a/LexicalClipboard.prod.js b/LexicalClipboard.prod.js
+index bbdba299c722f205122534eb4ff83d447c177164..630ec2e24b252e43408db3bfac2d2c8f98bab3f0 100644
+--- a/LexicalClipboard.prod.js
++++ b/LexicalClipboard.prod.js
+@@ -1,3 +1,5 @@
++console.log('Imported clipboard version:', require('./package.json').version, '(MANUAL CHECK 0.30.0)', 'from:', __dirname);
++
+ /**
+  * Copyright (c) Meta Platforms, Inc. and affiliates.
+  *
+diff --git a/LexicalClipboard.prod.mjs b/LexicalClipboard.prod.mjs
+index c4b0e065bb4cffb16cc61be8b2478bfa92b38dbc..8bab32c0ea0abd4b9133e13f4ce6b8c150743858 100644
+--- a/LexicalClipboard.prod.mjs
++++ b/LexicalClipboard.prod.mjs
+@@ -1,3 +1,6 @@
++import pkg from'./package.json' with { type: 'json' };
++console.log('Imported clipboard version:', pkg.version, '(MANUAL CHECK 0.30.0)', 'from:', import.meta.url);
++
+ /**
+  * Copyright (c) Meta Platforms, Inc. and affiliates.
+  *
