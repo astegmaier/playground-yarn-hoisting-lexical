@@ -83,3 +83,8 @@ The issue was noticed by the lexical team in [Bug: peerDependencies from monorep
 The fix (i.e. changing `@lexical/rich-text` to specify `@lexical/clipboard` as a `dependency` instead of a `peerDependency`) was merged in [PR 5774: Node fork modules & moduleResolution bundler](https://github.com/facebook/lexical/pull/5774/files#diff-bd982f01c37e5b1c1687d8d11c3a0bcb8d3c64b0e027fc286efd5003766b1698) and published in `@lexical/rich-text` version `0.14.3`.
 
 But the fix was not backported, so you can still get in this state if you are in a monorepo that depends (in part) on old versions of lexical packages.
+
+## Workarounds
+
+It is possible to use the [yarn v4's packageExtensions feature](https://yarnpkg.com/configuration/yarnrc#packageExtensions) to tweak any given package's `dependencies` or `peerDependencies` in case the package author made a mistake.
+See [the commented-out lines in `.yarnrc.yml` link](.yarnrc.yml) for examples of how to to do this.
