@@ -20,7 +20,7 @@
     "clean:windows:all": "powershell -Command \"Remove-Item -Path 'yarn.lock' -Recurse -Force -ErrorAction SilentlyContinue; exit 0\" && npm run clean:windows",
     "clean:bash": "rm -rf node_modules packages/a/node_modules packages/b/node_modules .yarn/install-state.gz .pnpm-store .pnpm-cache",
     "clean:bash:all": "rm yarn.lock && npm run clean:bash",
-    "postinstall": "node scripts/add-lexical-debug-info.js"
+    "postinstall": "node scripts/add-debug-info.js"
   },
   "workspaces": {
     "packages": [
