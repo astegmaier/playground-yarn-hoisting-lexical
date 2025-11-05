@@ -28,6 +28,6 @@
   },
   "packageManager": "yarn@4.10.3",
   "resolutions": {
-    "@lexical/clipboard@npm:0.30.0": "patch:@lexical/clipboard@npm%3A0.12.6#~/.yarn/patches/@lexical-clipboard-npm-0.12.6-4163a238a6.patch"
+    "@lexical/clipboard@npm:0.12.6": "patch:@lexical/clipboard@npm%3A0.12.6#~/.yarn/patches/@lexical-clipboard-npm-0.12.6-4163a238a6.patch"
   }
 }
