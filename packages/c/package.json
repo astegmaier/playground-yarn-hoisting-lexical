@@ -1,0 +1,9 @@
+{
+  "name": "package-c",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "@lexical/clipboard": "^0.30.0"
+  }
+}
