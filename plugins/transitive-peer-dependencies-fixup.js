@@ -1,7 +1,7 @@
-const PLUGIN_CONFIG_FILE_NAME = `.yarn-package-extensions-generated.yaml`;
+const PLUGIN_CONFIG_FILE_NAME = `.yarn-transitive-peer-dependencies-fixup.yaml`;
 
 module.exports = {
-  name: `plugin-fixup-transitive-peer-dependencies`,
+  name: `plugin-transitive-peer-dependencies-fixup`,
   factory: (require) => {
     const { BaseCommand } = require(`@yarnpkg/cli`);
     const { Configuration, Project, structUtils } = require(`@yarnpkg/core`);
@@ -37,7 +37,7 @@ module.exports = {
     }
 
     class FixupTransitivePeerDependenciesCommand extends BaseCommand {
-      static paths = [[`fixup-transitive-peer-dependencies`]];
+      static paths = [[`transitive-peer-dependencies-fixup`]];
 
       static usage = Command.Usage({
         description: `fixes up missing transitive peer dependencies`,
@@ -51,7 +51,7 @@ module.exports = {
         examples: [
           [
             `Fix up all peer dependencies`,
-            `$0 fixup-transitive-peer-dependencies`,
+            `$0 transitive-peer-dependencies-fixup`,
           ],
         ],
       });
