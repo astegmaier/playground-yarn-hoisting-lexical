@@ -16,9 +16,9 @@
     "reinstall:windows:all": "npm run clean:windows:all && yarn install",
     "reinstall:bash": "npm run clean:bash && yarn install",
     "reinstall:bash:all": "npm run clean:bash:all && yarn install",
-    "clean:windows": "powershell -Command \"Remove-Item -Path '.yarn-global-cache', 'node_modules', 'packages/a/node_modules', 'packages/b/node_modules', '.yarn/install-state.gz', '.pnpm-store', '.pnpm-cache' -Recurse -Force -ErrorAction SilentlyContinue; exit 0\"",
+    "clean:windows": "powershell -Command \"Remove-Item -Path '.temp-yarn-global-cache', 'node_modules', 'packages/a/node_modules', 'packages/b/node_modules', '.yarn/install-state.gz', '.pnpm-store', '.pnpm-cache' -Recurse -Force -ErrorAction SilentlyContinue; exit 0\"",
     "clean:windows:all": "powershell -Command \"Remove-Item -Path 'yarn.lock' -Recurse -Force -ErrorAction SilentlyContinue; exit 0\" && npm run clean:windows",
-    "clean:bash": "rm -rf .yarn-global-cache node_modules packages/a/node_modules packages/b/node_modules .yarn/install-state.gz .pnpm-store .pnpm-cache",
+    "clean:bash": "rm -rf .temp-yarn-global-cache node_modules packages/a/node_modules packages/b/node_modules .yarn/install-state.gz .pnpm-store .pnpm-cache",
     "clean:bash:all": "rm yarn.lock && npm run clean:bash"
   },
   "workspaces": {
