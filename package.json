@@ -5,6 +5,7 @@
   "license": "ISC",
   "private": true,
   "scripts": {
+    "test:plugin": "yarn explain peer-requirements && yarn fixup-transitive-peer-dependencies",
     "retest:windows": "npm run reinstall:windows && npm run test",
     "retest:windows:all": "npm run reinstall:windows:all && npm run test",
     "retest:bash": "npm run reinstall:bash && npm run test",
