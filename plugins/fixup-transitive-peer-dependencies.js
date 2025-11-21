@@ -43,15 +43,9 @@ module.exports = {
 
         await project.applyLightResolution();
 
-        const sorted = miscUtils.sortMap(project.peerRequirementNodes, [
-          ([, requirement]) =>
-            structUtils.stringifyLocator(requirement.subject),
-          ([, requirement]) => structUtils.stringifyIdent(requirement.ident),
-        ]);
-
         const allPackageExtensions = {};
 
-        for (const [, peerRequirement] of sorted.values()) {
+        for (const peerRequirement of project.peerRequirementNodes.values()) {
           if (!peerRequirement.root) continue;
 
           const warning = project.peerWarnings.find((warning) => {
