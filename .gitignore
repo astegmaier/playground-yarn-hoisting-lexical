@@ -4,3 +4,6 @@ node_modules
 # pnpm local cache directories
 .pnpm-store
 .pnpm-cache
+
+# yarn global cache
+.temp-yarn-global-cache
