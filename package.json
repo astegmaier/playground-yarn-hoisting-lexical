@@ -5,7 +5,7 @@
   "license": "ISC",
   "private": true,
   "scripts": {
-    "test:plugin": "yarn explain peer-requirements && yarn fixup-transitive-peer-dependencies",
+    "test:plugin": "node scripts/delete.js .yarn-transitive-peer-dependencies-fixup.yaml && yarn explain peer-requirements && yarn transitive-peer-dependencies-fixup && echo \"Done fixing up transitive peer dependencies!\n\" && yarn explain peer-requirements",
     "retest:windows": "npm run reinstall:windows && npm run test",
     "retest:windows:all": "npm run reinstall:windows:all && npm run test",
     "retest:bash": "npm run reinstall:bash && npm run test",

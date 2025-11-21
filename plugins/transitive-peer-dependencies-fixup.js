@@ -1,11 +1,18 @@
 const PLUGIN_CONFIG_FILE_NAME = `.yarn-transitive-peer-dependencies-fixup.yaml`;
 
+/**
+ * Whether to enable injecting packageExtensions from the plugin config file into yarn's actual configuration.
+ * We need to turn this off when we initialize the fixup process, so that we can read the project state without
+ * having the packageExtensions already applied - so we know what needs to be fixed up.
+ */
+let applyFixupFromPluginConfigFile = true;
+
 module.exports = {
   name: `plugin-transitive-peer-dependencies-fixup`,
   factory: (require) => {
     const { BaseCommand } = require(`@yarnpkg/cli`);
     const { Configuration, Project, structUtils } = require(`@yarnpkg/core`);
-    const { parseSyml, stringifySymbl } = require("@yarnpkg/parsers");
+    const { parseSyml, stringifySyml } = require("@yarnpkg/parsers");
     const { Command } = require("clipanion");
     const { ppath, xfs } = require("@yarnpkg/fslib");
 
@@ -13,10 +20,17 @@ module.exports = {
       configuration,
       registerPackageExtension
     ) {
+      if (!applyFixupFromPluginConfigFile) {
+        return;
+      }
       const pluginConfigFilePath = ppath.join(
         configuration.projectCwd,
         PLUGIN_CONFIG_FILE_NAME
       );
+      if (!xfs.existsSync(pluginConfigFilePath)) {
+        // TODO: if no file is found, tell the user they have to run "init" to generate the file.
+        return;
+      }
       const pluginConfigFileString = await xfs.readFileSync(
         pluginConfigFilePath,
         "utf8"
@@ -24,7 +38,6 @@ module.exports = {
       const pluginConfig = parseSyml(pluginConfigFileString);
 
       // TODO: validate that the package extensions in the config file have the right structure.
-      // TODO: if no file is found, tell the user they have to run "init" to generate the file.
 
       for (const [descriptorStr, extensions] of Object.entries(
         pluginConfig.packageExtensions || {}
@@ -57,6 +70,7 @@ module.exports = {
       });
 
       async execute() {
+        applyFixupFromPluginConfigFile = false;
         const configuration = await Configuration.find(
           this.context.cwd,
           this.context.plugins
@@ -101,18 +115,21 @@ module.exports = {
               );
 
               if (!allPackageExtensions[pkg]) {
-                allPackageExtensions[pkg] = {};
+                allPackageExtensions[pkg] = { peerDependencies: {} };
               }
-              const packageExtensions = allPackageExtensions[pkg];
+              const peerDependenciesExtensions =
+                allPackageExtensions[pkg].peerDependencies;
 
-              packageExtensions[peerDepToDeclare] = "*";
+              peerDependenciesExtensions[peerDepToDeclare] = "*";
             }
           }
         }
 
-        this.context.stdout.write(
-          JSON.stringify(allPackageExtensions, null, 2)
+        await xfs.writeFileSync(
+          ppath.join(configuration.projectCwd, PLUGIN_CONFIG_FILE_NAME),
+          stringifySyml({ packageExtensions: allPackageExtensions })
         );
+        applyFixupFromPluginConfigFile = true;
       }
     }
 
