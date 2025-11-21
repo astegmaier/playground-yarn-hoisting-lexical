@@ -1,14 +1,40 @@
+const PLUGIN_CONFIG_FILE_NAME = `.yarn-package-extensions-generated.yaml`;
+
 module.exports = {
   name: `plugin-fixup-transitive-peer-dependencies`,
   factory: (require) => {
     const { BaseCommand } = require(`@yarnpkg/cli`);
-    const {
-      Configuration,
-      Project,
-      miscUtils,
-      structUtils,
-    } = require(`@yarnpkg/core`);
+    const { Configuration, Project, structUtils } = require(`@yarnpkg/core`);
+    const { parseSyml, stringifySymbl } = require("@yarnpkg/parsers");
     const { Command } = require("clipanion");
+    const { ppath, xfs } = require("@yarnpkg/fslib");
+
+    async function registerPackageExtensions(
+      configuration,
+      registerPackageExtension
+    ) {
+      const pluginConfigFilePath = ppath.join(
+        configuration.projectCwd,
+        PLUGIN_CONFIG_FILE_NAME
+      );
+      const pluginConfigFileString = await xfs.readFileSync(
+        pluginConfigFilePath,
+        "utf8"
+      );
+      const pluginConfig = parseSyml(pluginConfigFileString);
+
+      // TODO: validate that the package extensions in the config file have the right structure.
+      // TODO: if no file is found, tell the user they have to run "init" to generate the file.
+
+      for (const [descriptorStr, extensions] of Object.entries(
+        pluginConfig.packageExtensions || {}
+      )) {
+        registerPackageExtension(
+          structUtils.parseDescriptor(descriptorStr, true),
+          extensions
+        );
+      }
+    }
 
     class FixupTransitivePeerDependenciesCommand extends BaseCommand {
       static paths = [[`fixup-transitive-peer-dependencies`]];
@@ -91,6 +117,7 @@ module.exports = {
     }
 
     return {
+      hooks: { registerPackageExtensions },
       commands: [FixupTransitivePeerDependenciesCommand],
     };
   },

@@ -7,3 +7,4 @@ node_modules
 
 # yarn global cache
 .temp-yarn-global-cache
+.yarn-package-extensions-generated.yaml
