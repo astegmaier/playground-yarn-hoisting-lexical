@@ -47,27 +47,40 @@ module.exports = {
 
         for (const peerRequirement of project.peerRequirementNodes.values()) {
           if (!peerRequirement.root) continue;
+          // If a workspace package is missing a peer dependency, we need to treat it differently,
+          // since it might take some judgement on our part to decide which version to supply.
+          if (peerRequirement.subject.reference.startsWith(`workspace:`)) {
+            // TODO: figure out how to build a packageExtension for the workspace package
+            // that selects a sensible version to provide for the peer dependency, and errors if it is impossible
+            // (e.g. multiple dependents require different incompatible versions of the same peer dep).
+            continue;
+          }
+          // If a transitive dependency fails to "pass along" a peer dependency, we can safely add
+          // a reference to peerDependencies: { peerDep: "*" }, since yarn will merge this "*" requirement
+          // with the actual version requested by the nested consumer, and pass it along to the parent package.
+          // See: https://github.com/yarnpkg/berry/issues/3#issuecomment-872538425
+          else {
+            const warning = project.peerWarnings.find((warning) => {
+              return warning.hash === peerRequirement.hash;
+            });
 
-          const warning = project.peerWarnings.find((warning) => {
-            return warning.hash === peerRequirement.hash;
-          });
+            if (warning && peerRequirement.provided.range === "missing:") {
+              const pkgName = structUtils.stringifyIdent(
+                peerRequirement.subject
+              );
+              const pkgVersion = peerRequirement.subject.version;
+              const pkg = `${pkgName}@${pkgVersion}`;
+              const peerDepToDeclare = structUtils.stringifyIdent(
+                peerRequirement.ident
+              );
 
-          if (warning && peerRequirement.provided.range === "missing:") {
-            const pkgName = structUtils.stringifyIdent(
-              peerRequirement.subject
-            );
-            const pkgVersion = peerRequirement.subject.version;
-            const pkg = `${pkgName}@${pkgVersion}`;
-            const peerDepToDeclare = structUtils.stringifyIdent(
-              peerRequirement.ident
-            );
+              if (!allPackageExtensions[pkg]) {
+                allPackageExtensions[pkg] = {};
+              }
+              const packageExtensions = allPackageExtensions[pkg];
 
-            if (!allPackageExtensions[pkg]) {
-              allPackageExtensions[pkg] = {};
+              packageExtensions[peerDepToDeclare] = "*";
             }
-            const packageExtensions = allPackageExtensions[pkg];
-
-            packageExtensions[peerDepToDeclare] = "*";
           }
         }
 
