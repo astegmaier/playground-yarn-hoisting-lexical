@@ -60,13 +60,84 @@ module.exports = {
       }
     }
 
-    class FixupTransitivePeerDependenciesCommand extends BaseCommand {
-      static paths = [[`transitive-peer-dependencies-fixup`, 'init']];
+    /**
+     * @params context - the context provided by the BaseCommand class.
+     * @returns {Promise<{contents: string; path: string}>} The contents and location of the generated config file.
+     */
+    async function generateFixupPackageExtensionsConfig(context) {
+      applyFixupFromPluginConfigFile = false;
+
+      const configuration = await Configuration.find(
+        context.cwd,
+        context.plugins
+      );
+      const { project } = await Project.find(configuration, context.cwd);
+
+      await project.restoreInstallState({
+        restoreResolutions: false,
+      });
+
+      await project.applyLightResolution();
+
+      const allPackageExtensions = {};
+
+      for (const peerRequirement of project.peerRequirementNodes.values()) {
+        if (!peerRequirement.root) continue;
+        // If a workspace package is missing a peer dependency, we need to treat it differently,
+        // since it might take some judgement on our part to decide which version to supply.
+        if (peerRequirement.subject.reference.startsWith(`workspace:`)) {
+          // TODO: figure out how to build a packageExtension for the workspace package
+          // that selects a sensible version to provide for the peer dependency, and errors if it is impossible
+          // (e.g. multiple dependents require different incompatible versions of the same peer dep).
+          continue;
+        }
+        // If a transitive dependency fails to "pass along" a peer dependency, we can safely add
+        // a reference to peerDependencies: { peerDep: "*" }, since yarn will merge this "*" requirement
+        // with the actual version requested by the nested consumer, and pass it along to the parent package.
+        // See: https://github.com/yarnpkg/berry/issues/3#issuecomment-872538425
+        else {
+          const warning = project.peerWarnings.find((warning) => {
+            return warning.hash === peerRequirement.hash;
+          });
+
+          if (warning && peerRequirement.provided.range === "missing:") {
+            const pkgName = structUtils.stringifyIdent(peerRequirement.subject);
+            const pkgVersion = peerRequirement.subject.version;
+            const pkg = `${pkgName}@${pkgVersion}`;
+            const peerDepToDeclare = structUtils.stringifyIdent(
+              peerRequirement.ident
+            );
+
+            if (!allPackageExtensions[pkg]) {
+              allPackageExtensions[pkg] = { peerDependencies: {} };
+            }
+            const peerDependenciesExtensions =
+              allPackageExtensions[pkg].peerDependencies;
+
+            peerDependenciesExtensions[peerDepToDeclare] = "*";
+          }
+        }
+      }
+
+      const contents =
+        CONFIG_FILE_MESSAGE +
+        stringifySyml({ packageExtensions: allPackageExtensions });
+      const path = ppath.join(
+        configuration.projectCwd,
+        PLUGIN_CONFIG_FILE_NAME
+      );
+
+      applyFixupFromPluginConfigFile = true;
+      return { contents, path };
+    }
+
+    class InitCommand extends BaseCommand {
+      static paths = [[`transitive-peer-dependencies-fixup`, "init"]];
 
       static usage = Command.Usage({
         description: `Initializes or updates the transitive peer dependencies fixup configuration file.`,
         details: `
-      Generates or updates a ${PLUGIN_CONFIG_FILE_NAME} file that augments all packages that should have declared a 'transitive' peer dependency, but didn't.
+      Generates or updates a '${PLUGIN_CONFIG_FILE_NAME}' file that augments all packages that should have declared a 'transitive' peer dependency, but didn't.
 
       When a package has a peerDependency 'foo', it's _direct_ ancestor is expected to either provide it, or pass along by _also_ declaring { peerDependency 'foo' }.
 
@@ -75,72 +146,45 @@ module.exports = {
       });
 
       async execute() {
-        applyFixupFromPluginConfigFile = false;
-        const configuration = await Configuration.find(
-          this.context.cwd,
-          this.context.plugins
+        const { path, contents } = await generateFixupPackageExtensionsConfig(
+          this.context
         );
-        const { project } = await Project.find(configuration, this.context.cwd);
+        await xfs.writeFileSync(path, contents, "utf8");
+        this.context.stdout.write(
+            `Updated ${PLUGIN_CONFIG_FILE_NAME} with package extensions for all missing transitive peer dependencies.\n`
+          );
+      }
+    }
 
-        await project.restoreInstallState({
-          restoreResolutions: false,
-        });
+    class CheckCommand extends BaseCommand {
+      static paths = [[`transitive-peer-dependencies-fixup`, "check"]];
 
-        await project.applyLightResolution();
+      static usage = Command.Usage({
+        description: `Validates the '${PLUGIN_CONFIG_FILE_NAME}' configuration file.`,
+      });
 
-        const allPackageExtensions = {};
-
-        for (const peerRequirement of project.peerRequirementNodes.values()) {
-          if (!peerRequirement.root) continue;
-          // If a workspace package is missing a peer dependency, we need to treat it differently,
-          // since it might take some judgement on our part to decide which version to supply.
-          if (peerRequirement.subject.reference.startsWith(`workspace:`)) {
-            // TODO: figure out how to build a packageExtension for the workspace package
-            // that selects a sensible version to provide for the peer dependency, and errors if it is impossible
-            // (e.g. multiple dependents require different incompatible versions of the same peer dep).
-            continue;
-          }
-          // If a transitive dependency fails to "pass along" a peer dependency, we can safely add
-          // a reference to peerDependencies: { peerDep: "*" }, since yarn will merge this "*" requirement
-          // with the actual version requested by the nested consumer, and pass it along to the parent package.
-          // See: https://github.com/yarnpkg/berry/issues/3#issuecomment-872538425
-          else {
-            const warning = project.peerWarnings.find((warning) => {
-              return warning.hash === peerRequirement.hash;
-            });
-
-            if (warning && peerRequirement.provided.range === "missing:") {
-              const pkgName = structUtils.stringifyIdent(
-                peerRequirement.subject
-              );
-              const pkgVersion = peerRequirement.subject.version;
-              const pkg = `${pkgName}@${pkgVersion}`;
-              const peerDepToDeclare = structUtils.stringifyIdent(
-                peerRequirement.ident
-              );
-
-              if (!allPackageExtensions[pkg]) {
-                allPackageExtensions[pkg] = { peerDependencies: {} };
-              }
-              const peerDependenciesExtensions =
-                allPackageExtensions[pkg].peerDependencies;
-
-              peerDependenciesExtensions[peerDepToDeclare] = "*";
-            }
-          }
+      async execute() {
+        const { path, contents } = await generateFixupPackageExtensionsConfig(
+          this.context
+        );
+        // TODO: this is not a particularly efficient way to check for file equality. Let's see if we can do better.
+        const existingContents = await xfs.readFileSync(path, 'utf8');
+        if (existingContents !== contents) {
+          this.context.stdout.write(
+            `The ${PLUGIN_CONFIG_FILE_NAME} file is out of date. Please run 'yarn transitive-peer-dependencies-fixup init' to update it.\n`
+          );
+        } else {
+          this.context.stdout.write(
+            `The ${PLUGIN_CONFIG_FILE_NAME} file is up to date.\n`
+          );
         }
-
-        await xfs.writeFileSync(
-          ppath.join(configuration.projectCwd, PLUGIN_CONFIG_FILE_NAME),
-          CONFIG_FILE_MESSAGE + stringifySyml({ packageExtensions: allPackageExtensions })
-        );
-        applyFixupFromPluginConfigFile = true;
+        process.exit(1);
       }
     }
 
     return {
       hooks: { registerPackageExtensions },
-      commands: [FixupTransitivePeerDependenciesCommand],
+      commands: [InitCommand, CheckCommand],
     };
   },
 };
