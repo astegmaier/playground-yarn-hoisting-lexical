@@ -64,20 +64,14 @@ module.exports = {
       static paths = [[`transitive-peer-dependencies-fixup`, 'init']];
 
       static usage = Command.Usage({
-        description: `fixes up missing transitive peer dependencies`,
+        description: `Initializes or updates the transitive peer dependencies fixup configuration file.`,
         details: `
-      Generates packageExtensions that augment all packages that should have declared a 'transitive' peer dependency, but didn't.
+      Generates or updates a ${PLUGIN_CONFIG_FILE_NAME} file that augments all packages that should have declared a 'transitive' peer dependency, but didn't.
 
       When a package has a peerDependency 'foo', it's _direct_ ancestor is expected to either provide it, or pass along by _also_ declaring { peerDependency 'foo' }.
 
       This requirement is not well enforced by the ecosystem, so it's common to find packages that fail to do this. This plugin fixes the problem by automatically adding the missing peerDependencies to all packages that need them.
     `,
-        examples: [
-          [
-            `Fix up all peer dependencies`,
-            `$0 transitive-peer-dependencies-fixup`,
-          ],
-        ],
       });
 
       async execute() {
