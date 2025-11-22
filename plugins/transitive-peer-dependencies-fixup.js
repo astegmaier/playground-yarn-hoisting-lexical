@@ -135,7 +135,7 @@ module.exports = {
       static paths = [[`transitive-peer-dependencies-fixup`, "init"]];
 
       static usage = Command.Usage({
-        description: `Initializes or updates the transitive peer dependencies fixup configuration file.`,
+        description: `Initializes or updates the ${PLUGIN_CONFIG_FILE_NAME} file.`,
         details: `
       Generates or updates a '${PLUGIN_CONFIG_FILE_NAME}' file that augments all packages that should have declared a 'transitive' peer dependency, but didn't.
 
