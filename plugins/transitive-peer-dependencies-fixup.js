@@ -61,7 +61,7 @@ module.exports = {
     }
 
     class FixupTransitivePeerDependenciesCommand extends BaseCommand {
-      static paths = [[`transitive-peer-dependencies-fixup`]];
+      static paths = [[`transitive-peer-dependencies-fixup`, 'init']];
 
       static usage = Command.Usage({
         description: `fixes up missing transitive peer dependencies`,
